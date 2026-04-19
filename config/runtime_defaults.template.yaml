@@ -1,0 +1,24 @@
+﻿version: 1
+runtime_defaults:
+  post_stack_intensity: conservative
+  second_pass_cfg:
+    auto_delta_enabled: false
+  second_pass_steps:
+    max_increase_percent: 20
+  sampler_scheduler:
+    draft: speed_first
+    production: realism_first
+  manual_polish:
+    required: false
+    recommended: true
+  source_ledger_strictness:
+    draft_open: balanced_minimum
+    production: strict
+  attribution_leak_policy:
+    draft_open: probabilistic_attribution_only
+    production: attribution_plus_mandatory_leak_test
+  style_influence_high:
+    action: warn_only
+  leak_test:
+    production_target_samples: 10000
+    constrained_floor_samples: 5000

@@ -1,0 +1,50 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://dufus.local/schemas/producer_payload.schema.json",
+  "title": "Producer Payload",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "request_id",
+    "release_class",
+    "run_mode",
+    "policy_version",
+    "gates"
+  ],
+  "properties": {
+    "request_id": { "type": "string", "minLength": 1 },
+    "release_class": { "type": "string", "enum": ["open", "licensed", "protected"] },
+    "run_mode": { "type": "string", "enum": ["draft", "production"] },
+    "policy_version": { "type": "string" },
+    "expected_decision": { "type": "string", "enum": ["pass", "hold", "warn", "block_release"] },
+    "expected_reason_codes_contains": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "break_glass": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["used", "approved_by_owner"],
+      "properties": {
+        "used": { "type": "boolean" },
+        "approved_by_owner": { "type": "boolean" },
+        "ticket_id": { "type": "string" },
+        "reason": { "type": "string" }
+      }
+    },
+    "gates": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["quality", "deconstruction", "robustness", "leakage", "compliance", "documentation", "watermark"],
+      "properties": {
+        "quality": { "type": "string", "enum": ["pass", "warn", "fail"] },
+        "deconstruction": { "type": "string", "enum": ["pass", "warn", "fail"] },
+        "robustness": { "type": "string", "enum": ["pass", "warn", "fail"] },
+        "leakage": { "type": "string", "enum": ["pass", "warn", "fail"] },
+        "compliance": { "type": "string", "enum": ["pass", "warn", "fail"] },
+        "documentation": { "type": "string", "enum": ["pass", "warn", "fail"] },
+        "watermark": { "type": "string", "enum": ["pass", "warn", "fail"] }
+      }
+    }
+  }
+}

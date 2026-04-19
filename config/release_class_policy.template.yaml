@@ -1,0 +1,27 @@
+﻿version: 1
+release_class_policy:
+  allowed_values:
+    - open
+    - licensed
+    - protected
+  defaults:
+    release_class: open
+  missing_documentation:
+    open: warn
+    licensed: block_release
+    protected: block_release
+  compliance_fail_behavior:
+    open: warn_or_hold_for_review
+    licensed: block_release
+    protected: block_release
+  watermark_checks_required_for:
+    - licensed
+    - protected
+  watermark_failure:
+    retry_attempts: 1
+    on_second_failure: warn
+  break_glass:
+    allowed_roles:
+      - owner
+    requires_reason: true
+    requires_ticket_id: true

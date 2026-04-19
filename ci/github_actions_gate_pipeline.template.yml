@@ -1,0 +1,41 @@
+﻿name: media-gate-pipeline-template
+
+'on':
+  workflow_dispatch: {}
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  evaluate-gates:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Run strict golden-vector contract validation
+        shell: pwsh
+        run: |
+          ./ci/run_dry_run_gate_validation.ps1 -RootDir . -OutputDir ./artifacts
+      - name: Verify producer payload exists
+        shell: pwsh
+        run: |
+          if (-not (Test-Path ./runtime/producer_payload.json)) {
+            throw "Missing required runtime/producer_payload.json input from producer stage"
+          }
+      - name: Transform producer payload to runtime signals
+        shell: pwsh
+        run: |
+          ./ci/write_runtime_signals_from_producer.ps1 -WorkspaceRoot . -ProducerPayloadPath ./runtime/producer_payload.json -OutputPath ./runtime/production_signals.json -Force
+      - name: Run production gate validation (real signals)
+        shell: pwsh
+        run: |
+          ./ci/run_production_gate_validation.ps1 -RootDir . -OutputDir ./artifacts -SignalsPath ./runtime/production_signals.json
+      - name: Run release readiness orchestration
+        shell: pwsh
+        run: |
+          ./ci/run_release_readiness.ps1 -RootDir . -OutputDir ./artifacts -ProductionSignalsPath ./runtime/production_signals.json
+      - name: Upload gate artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: gate-artifacts
+          path: artifacts/

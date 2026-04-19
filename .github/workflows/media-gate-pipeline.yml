@@ -1,0 +1,32 @@
+name: Media Gate Pipeline
+
+on:
+  workflow_dispatch: {}
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  evaluate-gates:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Verify producer payload exists
+        shell: pwsh
+        run: |
+          if (-not (Test-Path ./runtime/producer_payload.json)) {
+            throw "Missing required runtime/producer_payload.json input from producer stage"
+          }
+
+      - name: Run release readiness from producer payload
+        shell: pwsh
+        run: |
+          ./ci/run_release_readiness_from_producer.ps1 -WorkspaceRoot . -ProducerPayloadPath ./runtime/producer_payload.json -RootDir . -OutputDir ./artifacts
+
+      - name: Upload gate artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: gate-artifacts
+          path: artifacts/

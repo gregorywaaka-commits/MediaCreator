@@ -1,0 +1,32 @@
+{
+  "_type": "https://in-toto.io/Statement/v1",
+  "subject": [
+    {
+      "name": "REPLACE_WITH_ARTIFACT_NAME",
+      "digest": {
+        "sha256": "REPLACE_WITH_SHA256"
+      }
+    }
+  ],
+  "predicateType": "https://slsa.dev/provenance/v1",
+  "predicate": {
+    "buildDefinition": {
+      "buildType": "https://example.local/media-pipeline/build",
+      "externalParameters": {
+        "release_class": "REPLACE_WITH_RELEASE_CLASS",
+        "policy_version": "thresholds_v1"
+      },
+      "internalParameters": {},
+      "resolvedDependencies": []
+    },
+    "runDetails": {
+      "builder": {
+        "id": "https://example.local/builders/media-gate-runner"
+      },
+      "metadata": {
+        "invocationId": "REPLACE_WITH_RUN_ID"
+      },
+      "byproducts": []
+    }
+  }
+}

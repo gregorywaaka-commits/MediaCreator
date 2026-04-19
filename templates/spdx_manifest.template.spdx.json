@@ -1,0 +1,16 @@
+{
+  "spdxVersion": "SPDX-3.0",
+  "dataLicense": "CC0-1.0",
+  "SPDXID": "SPDXRef-DOCUMENT",
+  "name": "media-pipeline-artifact-bom",
+  "documentNamespace": "https://example.local/spdx/media-pipeline/REPLACE_WITH_RUN_ID",
+  "creationInfo": {
+    "created": "REPLACE_WITH_ISO_8601_UTC",
+    "creators": [
+      "Tool: media-gate-pipeline"
+    ]
+  },
+  "packages": [],
+  "files": [],
+  "relationships": []
+}

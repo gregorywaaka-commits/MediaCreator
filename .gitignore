@@ -1,0 +1,8 @@
+artifacts/*.json
+artifacts/*.md
+runtime/*.json
+!.gitkeep
+
+# optional local env files
+.env
+.env.*

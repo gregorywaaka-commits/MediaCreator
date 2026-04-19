@@ -1,0 +1,89 @@
+{
+  "version": 1,
+  "cases": [
+    {
+      "id": "open_missing_docs_warn",
+      "release_class": "open",
+      "signals": {
+        "missing_docs": true,
+        "compliance_fail": false,
+        "watermark_fail_twice": false,
+        "quality_pass": true
+      },
+      "expected": {
+        "decision": "warn",
+        "reason_codes_contains": ["missing_docs_open_warn"]
+      }
+    },
+    {
+      "id": "licensed_missing_docs_block",
+      "release_class": "licensed",
+      "signals": {
+        "missing_docs": true,
+        "compliance_fail": false,
+        "watermark_fail_twice": false,
+        "quality_pass": true
+      },
+      "expected": {
+        "decision": "block_release",
+        "reason_codes_contains": ["missing_docs_restricted_block"]
+      }
+    },
+    {
+      "id": "protected_compliance_fail_blocks_even_if_quality_pass",
+      "release_class": "protected",
+      "signals": {
+        "missing_docs": false,
+        "compliance_fail": true,
+        "watermark_fail_twice": false,
+        "quality_pass": true
+      },
+      "expected": {
+        "decision": "block_release",
+        "reason_codes_contains": ["compliance_fail_restricted_block", "tie_break_safety_over_quality"]
+      }
+    },
+    {
+      "id": "open_compliance_fail_hold",
+      "release_class": "open",
+      "signals": {
+        "missing_docs": false,
+        "compliance_fail": true,
+        "watermark_fail_twice": false,
+        "quality_pass": true
+      },
+      "expected": {
+        "decision": "hold",
+        "reason_codes_contains": ["compliance_fail_open_hold_for_review"]
+      }
+    },
+    {
+      "id": "licensed_watermark_retry_then_warn",
+      "release_class": "licensed",
+      "signals": {
+        "missing_docs": false,
+        "compliance_fail": false,
+        "watermark_fail_twice": true,
+        "quality_pass": true
+      },
+      "expected": {
+        "decision": "warn",
+        "reason_codes_contains": ["watermark_second_failure_warn"]
+      }
+    },
+    {
+      "id": "open_clean_pass",
+      "release_class": "open",
+      "signals": {
+        "missing_docs": false,
+        "compliance_fail": false,
+        "watermark_fail_twice": false,
+        "quality_pass": true
+      },
+      "expected": {
+        "decision": "pass",
+        "reason_codes_contains": ["all_required_gates_passed"]
+      }
+    }
+  ]
+}

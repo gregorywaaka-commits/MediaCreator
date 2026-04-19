@@ -1,0 +1,148 @@
+﻿version: 1
+name: dufus_media_pipeline_thresholds_v1
+updated: 2026-04-20
+
+runtime_defaults:
+  post_stack_intensity: conservative
+  second_pass:
+    auto_cfg_delta_enabled: false
+    step_cap_percent: 20
+  sampler_scheduler_family:
+    draft: speed_first
+    production: realism_first
+
+quality:
+  two_d:
+    artifact_score:
+      pass_max: 0.15
+      warn_min: 0.16
+      warn_max: 0.25
+      fail_min: 0.26
+    style_adherence:
+      pass_min: 0.78
+      warn_min: 0.70
+      warn_max: 0.77
+      fail_max: 0.69
+  three_d:
+    topology_health:
+      pass_min: 0.85
+      warn_min: 0.75
+      warn_max: 0.84
+      fail_max: 0.74
+    uv_distortion:
+      pass_max: 0.20
+      warn_min: 0.21
+      warn_max: 0.30
+      fail_min: 0.31
+    triangle_budget:
+      pass: "<= profile_limit"
+      fail: "> 1.10 * profile_limit"
+  animation:
+    loop_seam_score:
+      pass_max: 0.10
+      warn_min: 0.11
+      warn_max: 0.18
+      fail_min: 0.19
+    stability_score:
+      pass_min: 0.82
+      warn_min: 0.72
+      warn_max: 0.81
+      fail_max: 0.71
+
+deconstruction:
+  saliency_overlap:
+    pass_min: 0.70
+    warn_min: 0.60
+    warn_max: 0.69
+    fail_max: 0.59
+  context_recognizability_deconstructed:
+    pass_max: 0.35
+    warn_min: 0.36
+    warn_max: 0.50
+    fail_min: 0.51
+  diversity_score_8_samples:
+    pass_min: 0.45
+    fail_max: 0.44
+  latent_variance_ratio_floor:
+    fail_if_below: 0.20
+    fail_after_consecutive_checkpoints: 3
+
+robustness:
+  phase_stability_gate:
+    pass_after_consecutive_runs: 3
+    max_final_quality_variance: 0.05
+  multi_scale_consistency_gate:
+    low_level_min: 0.75
+    mid_level_min: 0.75
+    high_level_min: 0.75
+  ood_gate:
+    min_ratio_ood_to_ind: 0.80
+  operator_profile_robustness_gate:
+    max_required_metric_regression_percent: 7.0
+
+compliance:
+  provenance_completeness:
+    required_fields_coverage: 1.00
+  source_ledger_completeness:
+    required_fields_coverage: 1.00
+  influence_risk_score:
+    manual_review_min: 0.65
+    publish_block_min: 0.80
+  content_credentials:
+    c2pa_validation_required: true
+    active_manifest_required: true
+    ingredient_chain_required: true
+
+leakage:
+  memorization_stress_test:
+    min_generated_samples: 10000
+    constrained_min_generated_samples: 5000
+    restricted_near_duplicate:
+      ssim_min: 0.92
+      lpips_max: 0.08
+      max_allowed_hits: 0
+
+watermark:
+  detection_gate:
+    apply_only_for_release_class:
+      - licensed
+      - protected
+    retry_on_fail_count: 1
+    on_second_failure: warn_only
+    clean_true_positive_rate_min: 0.95
+    transformed_true_positive_rate_min: 0.85
+    false_positive_rate_max: 0.01
+
+governance:
+  release_class_policy:
+    licensed_or_protected:
+      missing_docs_action: block_release
+      compliance_failure_action: block_release
+    open:
+      missing_docs_action: warn_only
+      watermark_failure_action: warn_only
+  manual_polish:
+    required_for_production: false
+    recommended_for_production: true
+  source_ledger_mode:
+    open_or_draft: balanced
+    production: strict
+  attribution_mode:
+    open_or_draft: probabilistic_only
+    production: probabilistic_plus_mandatory_leak_test
+  high_influence_artist_style_action: warn_only
+  ci_break_glass_policy: owner_only_override
+  model_card_required: true
+  dataset_datasheet_required: true
+  spdx_manifest_required: true
+  slsa_aligned_build_provenance_required: true
+  ci_gate_required: true
+  ci_gate_report_artifacts_required:
+    - json
+    - markdown
+
+tie_break_rules:
+  - "Safety or compliance fail overrides quality pass"
+  - "Provenance fail blocks production publish"
+  - "Human override can only promote to draft mode"
+  - "OoD fail with InD pass remains draft-only"

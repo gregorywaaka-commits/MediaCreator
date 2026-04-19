@@ -1,0 +1,25 @@
+{
+  "request_id": "sample-production-001",
+  "release_class": "licensed",
+  "run_mode": "production",
+  "policy_version": "thresholds_v1",
+  "expected_decision": "pass",
+  "expected_reason_codes_contains": [
+    "all_required_gates_passed"
+  ],
+  "break_glass": {
+    "used": false,
+    "approved_by_owner": false,
+    "ticket_id": "",
+    "reason": ""
+  },
+  "gate_results": {
+    "quality": "pass",
+    "deconstruction": "pass",
+    "robustness": "pass",
+    "leakage": "pass",
+    "compliance": "pass",
+    "documentation": "pass",
+    "watermark": "pass"
+  }
+}
