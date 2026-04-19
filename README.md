@@ -40,6 +40,16 @@ CI runs the same path as local execution:
 3. run full release readiness,
 4. upload `artifacts/`.
 
+## Enable Branch Protection (One Command)
+Set a token with repo admin permission, then run:
+
+```powershell
+$env:GITHUB_TOKEN = "<your-token>"
+powershell -ExecutionPolicy Bypass -File ./tools/apply-branch-protection.ps1 -Owner gregorywaaka-commits -Repo MediaCreator -Branch main -RequiredStatusCheck evaluate-gates
+```
+
+This enforces PR review, conversation resolution, and requires the `evaluate-gates` status check on `main`.
+
 ## Notes
 - Local scripts are the source of truth.
 - GitHub workflow is an enforcement mirror for branch protection and auditability.
