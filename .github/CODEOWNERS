@@ -1,0 +1,7 @@
+# MediaCreator ownership
+* @gregorywaaka-commits
+
+# Critical automation surfaces
+/.github/workflows/ @gregorywaaka-commits
+/ci/ @gregorywaaka-commits
+/tools/ @gregorywaaka-commits

@@ -1,0 +1,29 @@
+name: Media Gate Weekly Smoke
+
+on:
+  schedule:
+    - cron: "0 9 * * 1"
+  workflow_dispatch: {}
+
+jobs:
+  weekly-smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Seed runtime producer payload
+        shell: pwsh
+        run: |
+          ./ci/seed_runtime_producer_payload.ps1 -WorkspaceRoot . -Force
+
+      - name: Run readiness from producer payload
+        shell: pwsh
+        run: |
+          ./ci/run_release_readiness_from_producer.ps1 -WorkspaceRoot . -ProducerPayloadPath ./runtime/producer_payload.json -RootDir . -OutputDir ./artifacts
+
+      - name: Upload smoke artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: media-gate-weekly-smoke-artifacts
+          path: artifacts/
