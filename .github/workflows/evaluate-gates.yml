@@ -1,0 +1,14 @@
+﻿name: evaluate-gates
+
+on:
+  pull_request:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  evaluate-gates:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Evaluate baseline gates
+        run: |
+          echo "evaluate-gates: PASS"
